@@ -1,55 +1,38 @@
 #include <iostream>
 #include <vector>
 
-long long call_count;
-
-long long fib_memo(int n, std::vector<long long>& memo) {
+long long fib_bottom_up(int n) {
     
-    call_count++;
-
-    if (memo[n] != -1) {
-        return memo[n];
-    }
-
-    long long result;
-
     if (n <= 1) {
-        result = n;
-    } else {
-        
-        result = fib_memo(n - 1, memo) + fib_memo(n - 2, memo);
+        return n;
     }
 
-    memo[n] = result;
-    
-    return result;
+    std::vector<long long> dp(n + 1);
+
+    dp[0] = 0;
+    dp[1] = 1;
+
+    for (int i = 2; i <= n; ++i) {
+        
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+
+    return dp[n];
 }
 
 int main() {
     int n = 40;
 
-    std::cout << "--- Task 3.2: Top-Down with Memoization ---" << std::endl;
-    std::cout << "\nComparing performance for n = " << n << std::endl;
+    std::cout << "--- Task 3.3: Bottom-Up (Tabulation) ---" << std::endl;
+    std::cout << "\nCalculating Fibonacci for n = " << n << "..." << std::endl;
 
-    std::cout << "\nRunning naive version..." << std::endl;
+    // Call the bottom-up function.
+    long long result = fib_bottom_up(n);
+
+    // Report the result.
+    std::cout << "Result: " << result << std::endl;
     
-    call_count = 0;
-
-    std::cout << "Naive version call count for n=40 is ~331,160,281" << std::endl;
-
-
-    std::cout << "\nRunning memoized version..." << std::endl;
-
-    std::vector<long long> memo(n + 1, -1);
-
-    call_count = 0;
-
-    long long memo_result = fib_memo(n, memo);
-
-    std::cout << "Result: " << memo_result << std::endl;
-    std::cout << "Number of function calls: " << call_count << std::endl;
-
-    std::cout << "\nMemoization reduces the calls from hundreds of millions to less than a hundred!" << std::endl;
+    std::cout << "\nThis version is extremely fast and has no recursive overhead." << std::endl;
 
     return 0;
 }
